@@ -299,7 +299,8 @@ endif
 #-------------------- Entropy Coder -------------------
 ifeq ($(NECODER), 0)
 OB+=FastARI/FastAri.o 
-OB+=ans_jb/rANS_static4c.o ans_jb/arith_static.o
+OB+=ans_jb/rANS_static4k.o ans_jb/rANS_static4_16i.o ans_jb/arith_static.o
+OB+=ans_jb/rANS_static4c.o 
 OB+=zlibh/zlibh.o
 OB+=subotin_/subotin.o 
 OB+=fqz0/f_o0.o

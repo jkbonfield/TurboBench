@@ -203,10 +203,14 @@ enum {
 #define C_JAC 	    ECODER    
  P_JAC, 
 #define C_JRANS		ECODER 
- P_JRANS,
- P_JRANS1,
- P_JRANS64,
- P_JRANS641,
+ P_JRANSo0,
+ P_JRANSo1,
+ P_JRANS4ko0,
+ P_JRANS4ko1,
+ P_JRANS4_16o0,
+ P_JRANS4_16o1,
+ P_JRANS64o0,
+ P_JRANS64o1,
 #define C_FPAQC 	GPL
  P_FPAQC,
 #define C_NANS		ECODER 
@@ -613,6 +617,8 @@ struct snappy_env env;
   
   #if C_JRANS
 #include "ans_jb/rANS_static4c.h"
+#include "ans_jb/rANS_static4k.h"
+#include "ans_jb/rANS_static4_16i.h"
     #ifdef __x86_64__
 #include "ans_jb/rANS_static64c.h"
     #endif
@@ -750,10 +756,14 @@ struct plugs plugs[] = {
   { P_JAC, 		"arith_static",		C_JAC, 		"15-07",	"Range Coder/J.Bonfield","BSD license",		"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
   { P_FQZ0, 	"fqz0",				C_FQZ, 		"15-03",	"FQZ/PPMD Range Coder",	"Public Domain",	"http://encode.ru/threads/2149-ao0ec-Bytewise-adaptive-order-0-entropy-coder",			""},
   { P_PPMDEC, 	"ppmdec", 			C_PPMDEC,	"15-03",	"PPMD Range Coder",		"Public Domain",	"http://encode.ru/threads/2149-ao0ec-Bytewise-adaptive-order-0-entropy-coder",  		""},
-  { P_JRANS, 	"rans_static4c",	C_JRANS,	"15-08",	"ANS/J.Bonfield",		"Public Domain",	"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
-  { P_JRANS1, 	"rans_static4c_o1", C_JRANS, 	"15-08",	"ANS/J.Bonfield",		"Public Domain",	"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
-  { P_JRANS64, 	"rans_static64c",	C_JRANS, 	"15-08",	"ANS 64/J.Bonfield",	"Public Domain",	"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
-  { P_JRANS641,	"rans_static64c_o1",C_JRANS, 	"15-08",	"ANS 64/J.Bonfield",	"Public Domain",	"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
+  { P_JRANSo0, 	"rans_static4c",	C_JRANS,	"15-08",	"ANS/J.Bonfield",		"Public Domain",	"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
+  { P_JRANSo1, 	"rans_static4c_o1", C_JRANS, 	"15-08",	"ANS/J.Bonfield",		"Public Domain",	"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
+  { P_JRANS4ko0, 	"rans_static4k",	C_JRANS,	"16-05",	"ANS/J.Bonfield",		"Public Domain",	"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
+  { P_JRANS4ko1, 	"rans_static4k_o1", C_JRANS, 	"16-05",	"ANS/J.Bonfield",		"Public Domain",	"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
+  { P_JRANS4_16o0, 	"rans_static4_16i",	C_JRANS,	"16-05",	"ANS/J.Bonfield",		"Public Domain",	"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
+  { P_JRANS4_16o1, 	"rans_static4_16io1", C_JRANS, 	"16-05",	"ANS/J.Bonfield",		"Public Domain",	"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
+  { P_JRANS64o0, 	"rans_static64c",	C_JRANS, 	"15-08",	"ANS 64/J.Bonfield",	"Public Domain",	"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
+  { P_JRANS64o1,	"rans_static64c_o1",C_JRANS, 	"15-08",	"ANS 64/J.Bonfield",	"Public Domain",	"ftp://ftp.sanger.ac.uk/pub/users/jkb",													"", E_ANS},
   { P_NANS,	    "naniarans",		C_NANS, 	"2015",	    "Nania Adaptive rANS",	"           ",		"http://encode.ru/threads/2079-nARANS-(Nania-Adaptive-Range-Variant-of-ANS)",			"", E_ANS},
   { P_POLHF,    "polar", 			C_POLHF, 	"10-07",	"Polar Codes",			"GPL license",		"http://www.ezcodesample.com/prefixer/prefixer_article.html",							"" },
   { P_SUB, 		"subotin", 			C_SUBOTIN, 	"2000",		"subotin RC",			"Public Domain",	"http://ezcodesample.com/ralpha/Subbotin.txt",											"" },
@@ -1271,11 +1281,15 @@ int codcomp(unsigned char *in, int inlen, unsigned char *out, int outsize, int c
       #endif
 
 	  #if C_JRANS
-    case P_JRANS:   return rans_compress_O0(in, inlen, out, oend);
-    case P_JRANS1:  return rans_compress_O1(in, inlen, out, oend); 
+    case P_JRANSo0:     return rans_compress_O0(in, inlen, out, oend);
+    case P_JRANSo1:     return rans_compress_O1(in, inlen, out, oend); 
+  case P_JRANS4ko0:   { unsigned outlen = outsize; return rans4k_compress_O0(in, inlen, out, &outlen) ? outlen : 0;}
+  case P_JRANS4ko1:   { unsigned outlen = outsize; return rans4k_compress_O1(in, inlen, out, &outlen) ? outlen : 0;} 
+  case P_JRANS4_16o0: { unsigned outlen = outsize; return rans4_16_compress_O0(in, inlen, out, &outlen) ? outlen : 0;}
+  case P_JRANS4_16o1: { unsigned outlen = outsize; return rans4_16_compress_O1(in, inlen, out, &outlen) ? outlen : 0;} 
         #ifdef __x86_64__
-    case P_JRANS64: return rans64_compress_O0(in, inlen, out, oend);
-    case P_JRANS641:return rans64_compress_O1(in, inlen, out, oend);
+    case P_JRANS64o0:  return rans64_compress_O0(in, inlen, out, oend);
+    case P_JRANS64o1:  return rans64_compress_O1(in, inlen, out, oend);
         #endif
 	  #endif
 
@@ -1649,11 +1663,15 @@ int coddecomp(unsigned char *in, int inlen, unsigned char *out, int outlen, int 
       #endif
 
 	  #if C_JRANS
-    case P_JRANS:   rans_uncompress_O0(  in, inlen, out, outlen); break;
-    case P_JRANS1:  rans_uncompress_O1(  in, inlen, out, outlen); break;
+    case P_JRANSo0:     rans_uncompress_O0(in, inlen, out, outlen); break;
+    case P_JRANSo1:     rans_uncompress_O1(in, inlen, out, outlen); break;
+    case P_JRANS4ko0:   rans4k_uncompress_O0(in, inlen, out, &outlen); break;
+    case P_JRANS4ko1:   rans4k_uncompress_O1(in, inlen, out, &outlen); break;
+    case P_JRANS4_16o0: rans4_16_uncompress_O0(in, inlen, out, &outlen); break;
+    case P_JRANS4_16o1: rans4_16_uncompress_O1(in, inlen, out, &outlen); break;
         #ifdef __x86_64__
-    case P_JRANS64: rans64_uncompress_O0(in, inlen, out, outlen); break;
-    case P_JRANS641:rans64_uncompress_O1(in, inlen, out, outlen); break;
+    case P_JRANS64o0:   rans64_uncompress_O0(in, inlen, out, outlen); break;
+    case P_JRANS64o1:   rans64_uncompress_O1(in, inlen, out, outlen); break;
         #endif
 	  #endif
 
